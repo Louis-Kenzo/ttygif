@@ -56,7 +56,7 @@ timeval_diff (struct timeval tv1, struct timeval tv2)
 
     if (diff.tv_usec < 0) {
         diff.tv_sec--;
-        diff.tv_usec += 1000000;
+        diff.tv_usec += 1e6;
     }
 
     return diff;
@@ -69,7 +69,7 @@ ttydelay (struct timeval prev, struct timeval cur)
     if (diff.tv_sec < 0) {
       diff.tv_sec = diff.tv_usec = 0;
     }
-    return (diff.tv_sec * 1000) + (diff.tv_usec / 1000);
+    return (diff.tv_sec * 1e6) + diff.tv_usec;
 }
 
 int
@@ -83,7 +83,7 @@ ttyread (FILE *fp, Header *h, char **buf)
     if (*buf == NULL) {
         perror("malloc");
     }
-	
+
     if (fread(*buf, 1, h->len, fp) == 0) {
         perror("fread");
     }
@@ -177,7 +177,7 @@ usage (void)
     exit(EXIT_FAILURE);
 }
 
-int 
+int
 main (int argc, char **argv)
 {
     ReadFunc read_func  = ttyread;
@@ -191,7 +191,7 @@ main (int argc, char **argv)
 
     set_progname(argv[0]);
     input = efopen(argv[1], "r");
-    
+
     assert(input != NULL);
 
     tcgetattr(0, &old); /* Get current terminal state */
